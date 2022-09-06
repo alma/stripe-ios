@@ -12,12 +12,12 @@ import UIKit
 /// its contents.
 /// This does *not* (currently?) have any logic or hooks for determining whether
 /// the contents are valid, that must be done by something else.
-class STPValidatedTextField: UITextField {
+public class STPValidatedTextField: UITextField {
 
     // MARK: - Property Overrides
     private var _defaultColor: UIColor?
     /// color to use for `text` when `validText` is YES
-    var defaultColor: UIColor? {
+    public var defaultColor: UIColor? {
         get {
             _defaultColor
         }
@@ -29,7 +29,7 @@ class STPValidatedTextField: UITextField {
 
     private var _errorColor: UIColor?
     /// color to use for `text` when `validText` is NO
-    var errorColor: UIColor? {
+    public var errorColor: UIColor? {
         get {
             _errorColor
         }
@@ -41,7 +41,7 @@ class STPValidatedTextField: UITextField {
 
     private var _placeholderColor: UIColor?
     /// color to use for `placeholderText`, displayed when `text` is empty
-    @objc var placeholderColor: UIColor? {
+    @objc open var placeholderColor: UIColor? {
         get {
             _placeholderColor
         }
@@ -83,6 +83,16 @@ class STPValidatedTextField: UITextField {
         }
     }
 
+  public var placeholderFont: UIFont? {
+    get {
+      return super.font
+    }
+    set(placeholderFont) {
+      super.font = placeholderFont
+      self._updateAttributedPlaceholder()
+    }
+  }
+
     // MARK: - Private Methods
     func updateColor() {
         textColor = validText ? defaultColor : errorColor
@@ -93,6 +103,11 @@ class STPValidatedTextField: UITextField {
         if let placeholderColor = placeholderColor {
             defaultAttributes[NSAttributedString.Key.foregroundColor] = placeholderColor
         }
+
+        if let placeholderFont = placeholderFont {
+          defaultAttributes[.font] = placeholderFont
+        }
+
         return defaultAttributes
     }
 }
