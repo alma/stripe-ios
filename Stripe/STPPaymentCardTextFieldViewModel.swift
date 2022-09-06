@@ -9,16 +9,16 @@
 import Foundation
 import UIKit
 
-@objc enum STPCardFieldType: Int {
+@objc public enum STPCardFieldType: Int {
     case number
     case expiration
     case CVC
     case postalCode
 }
 
-class STPPaymentCardTextFieldViewModel: NSObject {
+public class STPPaymentCardTextFieldViewModel: NSObject {
     private var _cardNumber: String?
-    @objc dynamic var cardNumber: String? {
+    @objc open dynamic var cardNumber: String? {
         get {
             _cardNumber
         }
@@ -101,7 +101,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    @objc dynamic var brand: STPCardBrand {
+    @objc open dynamic var brand: STPCardBrand {
         return STPCardValidator.brand(forNumber: cardNumber ?? "")
     }
 
@@ -113,7 +113,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
             && validationStateForCVC() == .valid
             && (!postalCodeRequired || validationStateForPostalCode() == .valid)
     }
-    @objc dynamic private(set) var hasCompleteMetadataForCardNumber = false
+    @objc open dynamic private(set) var hasCompleteMetadataForCardNumber = false
 
     var isNumberMaxLength: Bool {
         return (cardNumber?.count ?? 0) == STPBINController.shared.maxCardNumberLength()
@@ -151,7 +151,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         return nil
     }
 
-    func validationStateForExpiration() -> STPCardValidationState {
+    open func validationStateForExpiration() -> STPCardValidationState {
         let monthState = STPCardValidator.validationState(forExpirationMonth: expirationMonth ?? "")
         let yearState = STPCardValidator.validationState(
             forExpirationYear: expirationYear ?? "", inMonth: expirationMonth ?? "")
@@ -164,11 +164,11 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    func validationStateForCVC() -> STPCardValidationState {
+    open func validationStateForCVC() -> STPCardValidationState {
         return STPCardValidator.validationState(forCVC: cvc ?? "", cardBrand: brand)
     }
 
-    func validationStateForPostalCode() -> STPCardValidationState {
+    open func validationStateForPostalCode() -> STPCardValidationState {
         if (postalCode?.count ?? 0) > 0 {
             return .valid
         } else {
@@ -176,7 +176,7 @@ class STPPaymentCardTextFieldViewModel: NSObject {
         }
     }
 
-    func validationStateForCardNumber(handler: @escaping (STPCardValidationState) -> Void) {
+    open func validationStateForCardNumber(handler: @escaping (STPCardValidationState) -> Void) {
         STPBINController.shared.retrieveBINRanges(forPrefix: cardNumber ?? "") { _ in
             self.hasCompleteMetadataForCardNumber = STPBINController.shared.hasBINRanges(
                 forPrefix: self.cardNumber ?? "")

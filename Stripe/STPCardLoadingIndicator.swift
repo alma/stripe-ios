@@ -13,7 +13,7 @@ private let kCardLoadingInnerCircleDiameter: CGFloat = 10.0
 private let kLoadingAnimationSpinDuration: CFTimeInterval = 0.6
 private let kLoadingAnimationIdentifier = "STPCardLoadingIndicator.spinning"
 
-class STPCardLoadingIndicator: UIView {
+open class STPCardLoadingIndicator: UIView {
     private var indicatorLayer: CALayer?
 
     override init(frame: CGRect) {
@@ -52,11 +52,11 @@ class STPCardLoadingIndicator: UIView {
         indicatorLayer = innerCircle
     }
 
-    override var intrinsicContentSize: CGSize {
+  open override var intrinsicContentSize: CGSize {
         return CGSize(width: kCardLoadingIndicatorDiameter, height: kCardLoadingIndicatorDiameter)
     }
 
-    override func systemLayoutSizeFitting(
+  open override func systemLayoutSizeFitting(
         _ targetSize: CGSize,
         withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
         verticalFittingPriority: UILayoutPriority
@@ -64,7 +64,7 @@ class STPCardLoadingIndicator: UIView {
         return intrinsicContentSize
     }
 
-    override func didMoveToWindow() {
+  open override func didMoveToWindow() {
         super.didMoveToWindow()
         startAnimating()
     }
@@ -82,7 +82,7 @@ class STPCardLoadingIndicator: UIView {
         indicatorLayer?.removeAnimation(forKey: kLoadingAnimationIdentifier)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+  required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 }

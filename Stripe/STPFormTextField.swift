@@ -9,7 +9,7 @@
 import UIKit
 @_spi(STP) import StripeCore
 
-enum STPFormTextFieldAutoFormattingBehavior: Int {
+public enum STPFormTextFieldAutoFormattingBehavior: Int {
     case none
     case phoneNumbers
     case cardNumbers
@@ -37,7 +37,7 @@ enum STPFormTextFieldAutoFormattingBehavior: Int {
     @objc optional func formTextFieldTextDidChange(_ textField: STPFormTextField)
 }
 
-@objc class STPFormTextField: STPValidatedTextField {
+@objc public class STPFormTextField: STPValidatedTextField {
 
     private var _selectionEnabled = false
     var selectionEnabled: Bool {
@@ -68,7 +68,7 @@ enum STPFormTextFieldAutoFormattingBehavior: Int {
     }
     // defaults to NO
     private var _autoFormattingBehavior: STPFormTextFieldAutoFormattingBehavior = .none
-    var autoFormattingBehavior: STPFormTextFieldAutoFormattingBehavior {
+    open var autoFormattingBehavior: STPFormTextFieldAutoFormattingBehavior {
         get {
             _autoFormattingBehavior
         }
