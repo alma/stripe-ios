@@ -32,11 +32,11 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         return true
     }
 
-    private var metadataLoadingIndicator: STPCardLoadingIndicator?
+    open var metadataLoadingIndicator: STPCardLoadingIndicator?
 
     /// - seealso: STPPaymentCardTextFieldDelegate
     @IBOutlet open weak var delegate: STPPaymentCardTextFieldDelegate?
-    
+
     /// The font used in each child field. Default is `UIFont.systemFont(ofSize:18)`.
     @objc open var font: UIFont = {
         return UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 18))
@@ -584,23 +584,27 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         )
     }
 
-    @objc internal lazy var brandImageView: UIImageView = UIImageView(
+    @objc open lazy var brandImageView: UIImageView = UIImageView(
         image: Self.brandImage(for: .unknown))
+
+    @objc open lazy var cvvImageView: UIImageView = UIImageView(
+      image: Self.cvcImage(for: viewModel.brand))
+
     @objc internal lazy var fieldsView: UIView = UIView()
-    @objc internal lazy var numberField: STPFormTextField = {
+    @objc open lazy var numberField: STPFormTextField = {
         return build()
     }()
-    @objc internal lazy var expirationField: STPFormTextField = {
+    @objc open lazy var expirationField: STPFormTextField = {
         return build()
     }()
-    @objc internal lazy var cvcField: STPFormTextField = {
+    @objc open lazy var cvcField: STPFormTextField = {
         return build()
     }()
-    @objc internal lazy var postalCodeField: STPFormTextField = {
+    @objc open lazy var postalCodeField: STPFormTextField = {
         return build()
     }()
 
-    @objc internal lazy var viewModel: STPPaymentCardTextFieldViewModel =
+    @objc open lazy var viewModel: STPPaymentCardTextFieldViewModel =
         STPPaymentCardTextFieldViewModel()
 
     @objc internal var internalCardParams = STPPaymentMethodCardParams()
@@ -619,8 +623,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
      These track the input parameters to the brand image setter so that we can
      later perform proper transition animations when new values are set
      */
-    private var currentBrandImageFieldType: STPCardFieldType = .number
-    private var currentBrandImageBrand: STPCardBrand = .unknown
+    open var currentBrandImageFieldType: STPCardFieldType = .number
+    open var currentBrandImageBrand: STPCardBrand = .unknown
     /// This is a number-wrapped STPCardFieldType (or nil) that layout uses
     /// to determine how it should move/animate its subviews so that the chosen
     /// text field is fully visible.
@@ -666,7 +670,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         commonInit()
     }
 
-    func commonInit() {
+    open func commonInit() {
         STPAnalyticsClient.sharedClient.addClass(
             toProductUsageIfNecessary: STPPaymentCardTextField.self)
 
@@ -738,9 +742,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
         viewModel.postalCodeRequested = true
         countryCode = Locale.autoupdatingCurrent.regionCode
-        
+
         sizingField.formDelegate = nil
-        
+
         // We need to add sizingField and sizingLabel to the view
         // hierarchy so they can accurately size for dynamic font
         // sizes.
@@ -751,7 +755,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         addSubview(sizingLabel)
         sendSubviewToBack(sizingLabel)
         sendSubviewToBack(sizingField)
-        
+
     }
 
     // MARK: appearance properties
@@ -766,7 +770,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
         return .lightGray
     }()
-    
+
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
@@ -1101,7 +1105,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         recalculateSubviewLayout()
     }
 
-    func recalculateSubviewLayout() {
+    open func recalculateSubviewLayout() {
 
         let bounds = self.bounds
 
@@ -1832,7 +1836,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         return false
     }
 
-    @objc internal func brandImage(
+    @objc open func brandImage(
         for fieldType: STPCardFieldType, validationState: STPCardValidationState
     ) -> UIImage? {
         switch fieldType {
@@ -1855,7 +1859,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
 
-    func brandImageAnimationOptions(
+  open func brandImageAnimationOptions(
         forNewType newType: STPCardFieldType,
         newBrand: STPCardBrand,
         oldType: STPCardFieldType,
@@ -1883,7 +1887,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     }
 
-    func updateImage(for fieldType: STPCardFieldType) {
+  open func updateImage(for fieldType: STPCardFieldType) {
 
         let addLoadingIndicator: (() -> Void)? = {
             if self.metadataLoadingIndicator == nil {
@@ -1998,7 +2002,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
 
-    func defaultCVCPlaceholder() -> String? {
+  open func defaultCVCPlaceholder() -> String? {
         if viewModel.brand == .amex {
             return STPLocalizedString("CVV", "Label for entering CVV in text field")
         } else {
@@ -2006,7 +2010,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
 
-    func updateCVCPlaceholder() {
+  open func updateCVCPlaceholder() {
         if let cvcPlaceholder = cvcPlaceholder {
             cvcField.placeholder = cvcPlaceholder
             cvcField.accessibilityLabel = cvcPlaceholder
