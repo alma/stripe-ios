@@ -15,7 +15,7 @@ struct STPBINRange: Decodable, Equatable {
     let accountRangeLow: String
     let accountRangeHigh: String
     let country: String?
-    
+
     private enum CodingKeys: String, CodingKey {
         case panLength = "pan_length"
         case brand = "brand"
@@ -23,7 +23,7 @@ struct STPBINRange: Decodable, Equatable {
         case accountRangeHigh = "account_range_high"
         case country = "country"
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.panLength = try container.decode(UInt.self, forKey: .panLength)
@@ -34,7 +34,7 @@ struct STPBINRange: Decodable, Equatable {
         self.country = try? container.decode(String.self, forKey: .country)
         self.isHardcoded = false
     }
-    
+
     init(panLength: UInt, brand: STPCardBrand, accountRangeLow: String, accountRangeHigh: String, country: String?) {
         self.panLength = panLength
         self.brand = brand
@@ -43,7 +43,7 @@ struct STPBINRange: Decodable, Equatable {
         self.country = country
         self.isHardcoded = true
     }
-    
+
     /// indicates bin range was included in the SDK (rather than downloaded from edge service)
     var isHardcoded: Bool
 }
@@ -93,7 +93,7 @@ extension STPBINRange {
     }
 
     typealias BINRangeCompletionBlock = (Result<STPBINRangeResponse, Error>) -> Void
-    
+
     /// Converts a PKPayment object into a Stripe token using the Stripe API.
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
@@ -114,10 +114,10 @@ extension STPBINRange {
 
 typealias STPRetrieveBINRangesCompletionBlock = (Result<[STPBINRange], Error>) -> Void
 
-class STPBINController {
-    static let shared = STPBINController()
+open class STPBINController {
+    public static let shared = STPBINController()
 
-    func isLoadingCardMetadata(forPrefix binPrefix: String) -> Bool {
+    open func isLoadingCardMetadata(forPrefix binPrefix: String) -> Bool {
         var isLoading = false
         self._retrievalQueue.sync(execute: {
             let binPrefixKey = binPrefix.stp_safeSubstring(to: kPrefixLengthForMetadataRequest)
@@ -167,7 +167,7 @@ class STPBINController {
     func maxCardNumberLength() -> Int {
         return kMaxCardNumberLength
     }
-    
+
     /// Returns the shortest possible card number length for the brand
     func minCardNumberLength(for brand: STPCardBrand) -> Int {
         switch brand {
@@ -257,7 +257,7 @@ class STPBINController {
                             let completionBlocks = self.sPendingRequests[binPrefixKey]
 
                             self.sPendingRequests.removeValue(forKey: binPrefixKey)
-                            
+
                             if (recordErrorsAsSuccess) {
                                 // The following is a comment for STPCardFormView/STPPaymentCardTextField:
                                 // we'll record this response even if there was an error
@@ -348,7 +348,7 @@ class STPBINController {
         }
         return binRanges
     }()
-   
+
     private var sAllRanges: [STPBINRange] = {
         return STPBINRangeInitialRanges
     }()
